@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "app-logo.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
@@ -41,6 +42,7 @@
       "size" : "60x60"
     },
     {
+      "filename" : "app-logo 1.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
