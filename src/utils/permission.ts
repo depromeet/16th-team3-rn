@@ -1,6 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
 import {Platform, PermissionsAndroid} from 'react-native';
-import {getFCMToken} from '../services/notificationService';
 
 const requestAndroidPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version >= 33) {
@@ -36,7 +35,7 @@ export async function requestUserPermission() {
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-    await getFCMToken();
+    // const fcmToken = await getFCMToken();
     if (enabled) {
       console.log('Authorization status:', authStatus);
     }

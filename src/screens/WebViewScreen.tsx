@@ -4,6 +4,7 @@ import {WebView} from 'react-native-webview';
 import {Vibration} from 'react-native';
 import {WebViewManager} from '../utils/WebViewManager';
 import {useCameraPermission} from 'react-native-vision-camera';
+import {useFCM} from '../context/FCMContext';
 
 export default function WebViewScreen({
   navigation,
@@ -15,15 +16,13 @@ export default function WebViewScreen({
   const webViewRef = useRef<WebView>(null);
   const {hasPermission, requestPermission} = useCameraPermission();
   const [hasInjected, setHasInjected] = useState(false);
-
+  const {fcmToken} = useFCM();
   // 알림에서 전달받은 경로
   const {routeToOpen} = route.params || {};
 
   useEffect(() => {
-    if (webViewRef.current === null) {
-      WebViewManager.setWebViewRef(webViewRef);
-    }
-  }, []);
+    WebViewManager.setWebViewRef(webViewRef);
+  }, [webViewRef]);
 
   const handleWebViewMessage = async (event: any) => {
     try {
@@ -59,6 +58,11 @@ export default function WebViewScreen({
           console.log('test');
           console.log('test');
           break;
+
+        case 'GET_DEVICE_TOKEN':
+          console.log('GET_DEVICE_TOKEN');
+          WebViewManager.postMessage(fcmToken, 'GET_DEVICE_TOKEN');
+          break;
         default:
           console.log('Unknown message type:', message.type);
       }
@@ -87,7 +91,7 @@ export default function WebViewScreen({
       <WebView
         ref={webViewRef}
         style={styles.webview}
-        source={{uri: 'https://spurt-tau.vercel.app'}}
+        source={{uri: 'http://localhost:3000'}}
         onMessage={handleWebViewMessage}
         onLoad={() => console.log('onLoad')}
         onLoadEnd={handleWebViewLoadEnd}

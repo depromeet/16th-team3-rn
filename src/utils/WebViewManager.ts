@@ -1,25 +1,28 @@
+import {Alert, Platform} from 'react-native';
+
 export const WebViewManager = {
   webViewRef: null,
   setWebViewRef: (ref: any) => {
     WebViewManager.webViewRef = ref;
   },
-  postMessage: (data: any) => {
-    const message = JSON.stringify({
-      type: 'CAPTURED_IMAGE',
-      payload: {
-        image: `data:image/jpeg;base64,${data}`,
-      },
-    });
-    console.log('message', message);
-    console.log('message', WebViewManager.webViewRef);
-    console.log(
-      'WebViewManager.webViewRef?.current:',
-      WebViewManager.webViewRef?.current,
-    );
-
-    WebViewManager.webViewRef?.current?.injectJavaScript(`
-      window.postMessage(${JSON.stringify(message)}, '*');
-      true;
-    `);
+  postMessage: (data: any, type: string) => {
+    if (type === 'CAPTURED_IMAGE') {
+      const message = JSON.stringify({
+        type: type,
+        payload: {
+          image: `data:image/jpeg;base64,${data}`,
+        },
+      });
+      WebViewManager.webViewRef?.current?.postMessage(message);
+    } else {
+      const message = JSON.stringify({
+        type: type,
+        payload: {
+          fcmToken: data,
+          deviceType: Platform.OS.toUpperCase(),
+        },
+      });
+      WebViewManager.webViewRef?.current?.postMessage(message);
+    }
   },
 };

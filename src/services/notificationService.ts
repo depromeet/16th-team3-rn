@@ -26,6 +26,7 @@ export const getFCMToken = async () => {
     if (fcmToken) {
       // 서버에 FCM 토큰 저장
       // await saveTokenToServer(userId, fcmToken);
+      return fcmToken;
     } else {
       console.warn('⚠️ FCM 토큰을 가져오지 못했습니다.');
     }

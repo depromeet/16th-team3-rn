@@ -50,7 +50,7 @@ export default function CameraScreen({
         });
         if (photo?.path) {
           const base64 = await RNFS.readFile(photo.path, 'base64');
-          WebViewManager.postMessage(base64);
+          WebViewManager.postMessage(base64, 'CAPTURED_IMAGE');
         }
         setTimeout(() => {
           navigation.goBack();
