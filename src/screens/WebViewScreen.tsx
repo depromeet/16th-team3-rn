@@ -1,5 +1,12 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {StatusBar, StyleSheet, View, Alert} from 'react-native';
+import {
+  StatusBar,
+  StyleSheet,
+  View,
+  Alert,
+  Linking,
+  Platform,
+} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {Vibration} from 'react-native';
 import {WebViewManager} from '../utils/WebViewManager';
@@ -76,14 +83,55 @@ export default function WebViewScreen({
     console.log('handleWebViewLoadEnd');
     if (routeToOpen && !hasInjected) {
       setHasInjected(true);
-      webViewRef.current?.injectJavaScript(`
-        if (window.location.href !== '${routeToOpen}') {
-          window.location.href = '${routeToOpen}';
-        }
-        true;
-      `);
+      setTimeout(() => {
+        webViewRef.current?.injectJavaScript(`
+          if (window.location.href !== '${routeToOpen}') {
+            window.location.href = '${routeToOpen}';
+          }
+          true;
+        `);
+      }, 200);
     }
   }, [routeToOpen, hasInjected]);
+
+  // WebView ref (이미 존재하는 경우 사용)
+  // 예: const webViewRef = useRef<WebView>(null);
+
+  useEffect(() => {
+    // 앱 실행 시 딥링크로 열렸다면 처리
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        console.log('Initial URL:', url);
+        // 예: WebView에 JS를 주입하거나 상태 업데이트하여 로그인 완료를 처리
+        webViewRef.current?.injectJavaScript(`
+        // 카카오 로그인 결과를 처리하는 커스텀 이벤트 발송 예시
+        window.dispatchEvent(new CustomEvent('handleKakaoLogin', { detail: { url: '${url}' } }));
+        true;
+      `);
+      }
+    });
+
+    // 앱이 백그라운드에서 포그라운드로 전환될 때 처리
+    const subscription = Linking.addEventListener('url', ({url}) => {
+      console.log('Received URL from Linking:', url);
+      webViewRef.current?.injectJavaScript(`
+      window.dispatchEvent(new CustomEvent('handleKakaoLogin', { detail: { url: '${url}' } }));
+      true;
+    `);
+    });
+
+    return () => subscription.remove();
+  }, []);
+
+  // iOS에서 커스텀 URL 스킴(예: kakaotalk://) 감지하여 외부 앱 호출
+  const handleShouldStartLoadWithRequest = (request: any) => {
+    const {url} = request;
+    if (url.startsWith('kakaotalk://') || url.startsWith('kakaokommand://')) {
+      Linking.openURL(url);
+      return false; // 웹뷰에서는 해당 URL 로드하지 않음
+    }
+    return true;
+  };
 
   return (
     <View style={styles.container}>
@@ -91,16 +139,24 @@ export default function WebViewScreen({
       <WebView
         ref={webViewRef}
         style={styles.webview}
-        source={{uri: 'http://localhost:3000'}}
+        source={{uri: 'https://spurt.site'}}
         onMessage={handleWebViewMessage}
         onLoad={() => console.log('onLoad')}
         onLoadEnd={handleWebViewLoadEnd}
-        javaScriptEnabled={true}
-        sharedCookiesEnabled={true}
-        domStorageEnabled={true}
         onError={event => {
           console.error('WebView error: ', event.nativeEvent);
         }}
+        // 추가: 커스텀 URL 스킴 처리
+        onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
+        // 추가: Kakao 하이브리드 환경 감지를 위한 user agent 설정 (iOS의 경우)
+        userAgent={
+          Platform.OS === 'ios'
+            ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1'
+            : undefined
+        }
+        javaScriptEnabled={true}
+        sharedCookiesEnabled={true}
+        domStorageEnabled={true}
       />
     </View>
   );

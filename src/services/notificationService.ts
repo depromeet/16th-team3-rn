@@ -8,10 +8,12 @@ export const handleNotificationOpen = (remoteMessage: any) => {
 
   // 웹뷰 라우팅 처리
   if (data?.route) {
-    WebViewManager.webViewRef.current?.injectJavaScript(`
+    setTimeout(() => {
+      WebViewManager.webViewRef.current?.injectJavaScript(`
         window.location.href = '${data.route}/${data.taskId}';
         true;
       `);
+    }, 200); // 200ms = 0.2초
   }
   // 진동 취소
   Vibration.cancel();

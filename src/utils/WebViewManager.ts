@@ -15,6 +15,7 @@ export const WebViewManager = {
       });
       WebViewManager.webViewRef?.current?.postMessage(message);
     } else {
+      Alert.alert('postMessage', Platform.OS.toUpperCase());
       const message = JSON.stringify({
         type: type,
         payload: {

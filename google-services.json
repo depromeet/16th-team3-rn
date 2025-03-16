@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "385775822797",
+    "project_id": "spurt-1b566",
+    "storage_bucket": "spurt-1b566.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385775822797:android:8209469c034896855b8684",
+        "android_client_info": {
+          "package_name": "com.ssak3.spurt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaepVfbdsKc4tEu_unjI2C9PyuMgcQcXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

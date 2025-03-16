@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>spurtRN</string>
+	<string>spurt</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -32,11 +32,11 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow Spurt to use the camera</string>
+	<string>카메라 접근 권한</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>위치 접근 권한</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow Spurt to use the microphone</string>
+	<string>마이크 접근 권한</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
@@ -58,5 +58,20 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME)가 작은행동인 카메라 촬영을 위한 카메라 접근 권한이 필요합니다.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaotalk</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLName</key>
+    <string>com.sprt.ssak</string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>https://spurt.site/oauth/callback/kakao</string>
+    </array>
+  </dict>
+</array>
 </dict>
 </plist>
