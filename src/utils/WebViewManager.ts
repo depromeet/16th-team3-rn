@@ -1,4 +1,4 @@
-import {Alert, Platform} from 'react-native';
+import {Platform} from 'react-native';
 
 export const WebViewManager = {
   webViewRef: null,
@@ -10,12 +10,12 @@ export const WebViewManager = {
       const message = JSON.stringify({
         type: type,
         payload: {
-          image: `data:image/jpeg;base64,${data}`,
+          image: `data:image/jpeg;base64,${data.image}`,
+          taskId: data.taskId,
         },
       });
       WebViewManager.webViewRef?.current?.postMessage(message);
     } else {
-      Alert.alert('postMessage', Platform.OS.toUpperCase());
       const message = JSON.stringify({
         type: type,
         payload: {

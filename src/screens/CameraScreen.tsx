@@ -21,6 +21,8 @@ export default function CameraScreen({
 }) {
   const camera = useRef<Camera>(null);
   const device = useCameraDevice('back');
+  const taskId = route.params?.taskId;
+
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
 
@@ -50,7 +52,13 @@ export default function CameraScreen({
         });
         if (photo?.path) {
           const base64 = await RNFS.readFile(photo.path, 'base64');
-          WebViewManager.postMessage(base64, 'CAPTURED_IMAGE');
+          WebViewManager.postMessage(
+            JSON.stringify({
+              image: base64,
+              taskId: taskId,
+            }),
+            'CAPTURED_IMAGE',
+          );
         }
         setTimeout(() => {
           navigation.goBack();

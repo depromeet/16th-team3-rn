@@ -48,7 +48,9 @@ export default function WebViewScreen({
             }
           } else {
             console.log('Navigating to CameraViewScreen...');
-            navigation.navigate('CameraView');
+            navigation.navigate('CameraView', {
+              taskId: message.payload?.taskId,
+            });
           }
           break;
         case 'VIBRATE_ON':
@@ -98,30 +100,37 @@ export default function WebViewScreen({
   // 예: const webViewRef = useRef<WebView>(null);
 
   useEffect(() => {
-    // 앱 실행 시 딥링크로 열렸다면 처리
+    // 앱이 딥링크로 열렸을 때의 초기 URL 처리
     Linking.getInitialURL().then(url => {
       if (url) {
-        console.log('Initial URL:', url);
-        // 예: WebView에 JS를 주입하거나 상태 업데이트하여 로그인 완료를 처리
-        webViewRef.current?.injectJavaScript(`
-        // 카카오 로그인 결과를 처리하는 커스텀 이벤트 발송 예시
-        window.dispatchEvent(new CustomEvent('handleKakaoLogin', { detail: { url: '${url}' } }));
-        true;
-      `);
+        handleDeepLink(url);
       }
     });
 
-    // 앱이 백그라운드에서 포그라운드로 전환될 때 처리
+    // 앱이 실행 중일 때 딥링크 이벤트 처리
     const subscription = Linking.addEventListener('url', ({url}) => {
-      console.log('Received URL from Linking:', url);
-      webViewRef.current?.injectJavaScript(`
-      window.dispatchEvent(new CustomEvent('handleKakaoLogin', { detail: { url: '${url}' } }));
-      true;
-    `);
+      handleDeepLink(url);
     });
 
-    return () => subscription.remove();
+    return () => {
+      subscription.remove();
+    };
   }, []);
+
+  const handleDeepLink = (url: string) => {
+    console.log('Received deep link URL:', url);
+    // URL을 파싱해서 인가 코드 추출 (예: spurt://auth?code=abc123)
+    const codeMatch = url.match(/code=([^&]+)/);
+    if (codeMatch && codeMatch[1]) {
+      const authCode = codeMatch[1];
+      console.log('Authorization code:', authCode);
+      // 여기서 백엔드로 authCode를 전송하거나 웹뷰에 전달해서 로그인 완료 처리를 할 수 있습니다.
+      Alert.alert('로그인 완료', `인가 코드: ${authCode}`);
+      WebViewManager.postMessage(authCode, 'KAKAO_AUTH_TOKEN');
+    } else {
+      console.log('인가 코드가 URL에 없습니다.');
+    }
+  };
 
   // iOS에서 커스텀 URL 스킴(예: kakaotalk://) 감지하여 외부 앱 호출
   const handleShouldStartLoadWithRequest = (request: any) => {
@@ -143,6 +152,7 @@ export default function WebViewScreen({
         onMessage={handleWebViewMessage}
         onLoad={() => console.log('onLoad')}
         onLoadEnd={handleWebViewLoadEnd}
+        keyboardDisplayRequiresUserAction={false}
         onError={event => {
           console.error('WebView error: ', event.nativeEvent);
         }}

@@ -1,6 +1,6 @@
 import {WebViewManager} from '../utils/WebViewManager';
 import messaging from '@react-native-firebase/messaging';
-import {Alert, Vibration} from 'react-native';
+import {Vibration} from 'react-native';
 
 export const handleNotificationOpen = (remoteMessage: any) => {
   const {data} = remoteMessage;
@@ -24,7 +24,6 @@ export const getFCMToken = async () => {
   try {
     const fcmToken = await messaging().getToken();
     console.log('✅ FCM 토큰:', fcmToken);
-    // Alert.alert('FCM 토큰', fcmToken);
     if (fcmToken) {
       // 서버에 FCM 토큰 저장
       // await saveTokenToServer(userId, fcmToken);
