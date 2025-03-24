@@ -11,7 +11,11 @@ import {WebView} from 'react-native-webview';
 import {Vibration} from 'react-native';
 import {WebViewManager} from '../utils/WebViewManager';
 import {useCameraPermission} from 'react-native-vision-camera';
-import {useFCM} from '../context/FCMContext';
+import {
+  getFCMToken,
+  scheduleNotification,
+} from '../services/notificationService';
+// import PushNotification from 'react-native-push-notification';
 
 export default function WebViewScreen({
   navigation,
@@ -23,7 +27,6 @@ export default function WebViewScreen({
   const webViewRef = useRef<WebView>(null);
   const {hasPermission, requestPermission} = useCameraPermission();
   const [hasInjected, setHasInjected] = useState(false);
-  const {fcmToken} = useFCM();
   // 알림에서 전달받은 경로
   const {routeToOpen} = route.params || {};
 
@@ -67,11 +70,37 @@ export default function WebViewScreen({
           console.log('test');
           console.log('test');
           break;
-
-        case 'GET_DEVICE_TOKEN':
-          console.log('GET_DEVICE_TOKEN');
-          WebViewManager.postMessage(fcmToken, 'GET_DEVICE_TOKEN');
+        case 'SET_NOTIFICATION':
+          console.log('SET_NOTIFICATION');
+          console.log(message.route);
+          scheduleNotification(
+            60,
+            '알림',
+            '1분 후 알림이 도착합니다!',
+            message.route,
+          );
           break;
+
+        case 'GET_DEVICE_TOKEN': {
+          console.log('GET_DEVICE_TOKEN');
+          const fcmToken = await getFCMToken();
+          if (!fcmToken) {
+            WebViewManager.postMessage(
+              null,
+              'GET_DEVICE_TOKEN',
+              '권한이 없어서 토큰이 없음',
+            );
+
+            return;
+          }
+
+          WebViewManager.postMessage(
+            fcmToken,
+            'GET_DEVICE_TOKEN',
+            '핸들러통해서옴',
+          );
+          break;
+        }
         default:
           console.log('Unknown message type:', message.type);
       }
@@ -126,7 +155,11 @@ export default function WebViewScreen({
       console.log('Authorization code:', authCode);
       // 여기서 백엔드로 authCode를 전송하거나 웹뷰에 전달해서 로그인 완료 처리를 할 수 있습니다.
       Alert.alert('로그인 완료', `인가 코드: ${authCode}`);
-      WebViewManager.postMessage(authCode, 'KAKAO_AUTH_TOKEN');
+      WebViewManager.postMessage(
+        authCode,
+        'KAKAO_AUTH_TOKEN',
+        '카카오 로그인 완료',
+      );
     } else {
       console.log('인가 코드가 URL에 없습니다.');
     }

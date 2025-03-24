@@ -58,6 +58,7 @@ export default function CameraScreen({
               taskId: taskId,
             }),
             'CAPTURED_IMAGE',
+            '카메라 촬영',
           );
         }
         setTimeout(() => {
@@ -131,9 +132,7 @@ export default function CameraScreen({
           ]}
           onPress={handleCapture}
           disabled={!isCameraReady}>
-          <View style={styles.captureButtonInner}>
-            <View style={styles.captureButtonInnerInner} />
-          </View>
+          <View style={styles.captureButtonInner} />
         </TouchableOpacity>
       </View>
     </View>
@@ -246,14 +245,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  captureButtonInnerInner: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center',
   },

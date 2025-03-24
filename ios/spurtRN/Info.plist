@@ -20,19 +20,34 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.sprt.ssak</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>spurt</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaotalk</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
+		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>카메라 접근 권한</string>
+	<string>$(PRODUCT_NAME)가 작은행동인 카메라 촬영을 위한 카메라 접근 권한이 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>위치 접근 권한</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -56,22 +71,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME)가 작은행동인 카메라 촬영을 위한 카메라 접근 권한이 필요합니다.</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>kakaotalk</string>
-	</array>
-	<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleURLName</key>
-    <string>com.sprt.ssak</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>https://spurt.site/oauth/callback/kakao</string>
-    </array>
-  </dict>
-</array>
+	<key>FirebaseAppDelegateProxyEnabled</key> 
+	<true />
 </dict>
 </plist>
