@@ -13,7 +13,6 @@ pod 'Firebase/Core', :modular_headers => true
 pod 'Firebase/Messaging', :modular_headers => true
 pod 'FirebaseCore', :modular_headers => true
 pod 'FirebaseMessaging', :modular_headers => true
-pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil

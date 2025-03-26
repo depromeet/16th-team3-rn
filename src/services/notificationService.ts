@@ -1,6 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
-import PushNotification from 'react-native-push-notification';
 
 export const checkNotificationPermission = async () => {
   try {
@@ -47,27 +46,4 @@ export const getFCMToken = async () => {
     console.error('🚨 FCM 토큰 가져오기 실패:', error);
     return null;
   }
-};
-
-/**
- * 알림 예약 함수
- * @param {number} delaySeconds 알림 예약까지의 지연 시간(초), 기본값은 60초
- * @param {string} title 알림 제목, 기본값은 "알림"
- * @param {string} message 알림 메시지, 기본값은 "지정된 시간이 되었습니다!"
- * @param {string} route 웹뷰에서 열 경로, 기본값은 "/default"
- */
-export const scheduleNotification = (
-  delaySeconds = 60,
-  title = '알림',
-  message = '지정된 시간이 되었습니다!',
-  route = '/home-page',
-) => {
-  PushNotification.localNotificationSchedule({
-    title, // 알림 제목
-    message, // 알림 메시지
-    date: new Date(Date.now() + delaySeconds * 1000), // 예약 시간 설정
-    playSound: true, // 소리 재생 활성화
-    soundName: 'default', // iOS 기본 사운드 사용
-    userInfo: {route},
-  });
 };

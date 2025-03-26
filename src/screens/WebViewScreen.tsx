@@ -15,7 +15,6 @@ import {
   getFCMToken,
   scheduleNotification,
 } from '../services/notificationService';
-// import PushNotification from 'react-native-push-notification';
 
 export default function WebViewScreen({
   navigation,
@@ -111,16 +110,21 @@ export default function WebViewScreen({
 
   // WebView가 로드된 후 (onLoadEnd)에 routeToOpen이 있다면 injectJavaScript로 페이지 이동
   const handleWebViewLoadEnd = useCallback(() => {
-    console.log('handleWebViewLoadEnd');
+    console.log('1. handleWebViewLoadEnd 시작');
+
     if (routeToOpen && !hasInjected) {
       setHasInjected(true);
+
       setTimeout(() => {
         webViewRef.current?.injectJavaScript(`
-          if (window.location.href !== '${routeToOpen}') {
-            window.location.href = '${routeToOpen}';
-          }
-          true;
-        `);
+        if (window.location.href !== '${routeToOpen}') {
+          window.location.href = '${routeToOpen}';
+          console.log('9. 페이지 이동 실행: ${routeToOpen}');
+        } else {
+          console.log('9. 현재 페이지가 이미 해당 route임');
+        }
+        true;
+      `);
       }, 200);
     }
   }, [routeToOpen, hasInjected]);

@@ -53,10 +53,10 @@ export default function CameraScreen({
         if (photo?.path) {
           const base64 = await RNFS.readFile(photo.path, 'base64');
           WebViewManager.postMessage(
-            JSON.stringify({
+            {
               image: base64,
               taskId: taskId,
-            }),
+            },
             'CAPTURED_IMAGE',
             '카메라 촬영',
           );
@@ -87,36 +87,7 @@ export default function CameraScreen({
           console.error('Camera error:', error);
         }}
       />
-      {/* 상단 헤더: 뒤로가기 버튼 + "오늘의 미션" + 추가 텍스트 */}
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}>
-          {/* 
-            실제 아이콘(예: Ionicons, Feather 등)을 쓰려면:
-            <Ionicons name="chevron-back" size={24} color="#fff" />
-            또는 <Image source={...} style={styles.backIcon} />
-          */}
-          <Image source={ArrowLeft} style={styles.icon} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>오늘의 미션</Text>
-        <Text style={styles.missionText}>책상에서 피그마 프로그램 켜기</Text>
-      </View>
-      {/* 진행 상황 표시 바 (30초 타이머) */}
-      <View style={styles.progressContainer}>
-        <Animated.View
-          style={[
-            styles.progressBar,
-            {
-              transform: [
-                {
-                  scaleX: progressAnimation,
-                },
-              ],
-            },
-          ]}
-        />
-      </View>
+
       {/* "작업공간이 보이게 사진을 찍어주세요" 툴팁 */}
       <View style={styles.tooltipContainer}>
         <Text style={styles.tooltipText}>
