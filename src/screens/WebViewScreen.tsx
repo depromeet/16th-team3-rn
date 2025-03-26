@@ -11,10 +11,7 @@ import {WebView} from 'react-native-webview';
 import {Vibration} from 'react-native';
 import {WebViewManager} from '../utils/WebViewManager';
 import {useCameraPermission} from 'react-native-vision-camera';
-import {
-  getFCMToken,
-  scheduleNotification,
-} from '../services/notificationService';
+import {requestUserPermission} from '../utils/permission';
 
 export default function WebViewScreen({
   navigation,
@@ -69,20 +66,11 @@ export default function WebViewScreen({
           console.log('test');
           console.log('test');
           break;
-        case 'SET_NOTIFICATION':
-          console.log('SET_NOTIFICATION');
-          console.log(message.route);
-          scheduleNotification(
-            60,
-            '알림',
-            '1분 후 알림이 도착합니다!',
-            message.route,
-          );
-          break;
 
         case 'GET_DEVICE_TOKEN': {
           console.log('GET_DEVICE_TOKEN');
-          const fcmToken = await getFCMToken();
+          // 알림 권한 요청 후 토큰 받아오기
+          const fcmToken = await requestUserPermission();
           if (!fcmToken) {
             WebViewManager.postMessage(
               null,

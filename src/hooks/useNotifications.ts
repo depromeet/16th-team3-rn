@@ -30,7 +30,7 @@ export const useNotifications = () => {
 
   useEffect(() => {
     // 앱 시작 시 알림 권한 요청
-    requestUserPermission();
+    // requestUserPermission();
 
     // 앱이 quit(종료) 상태였다가 알림 클릭으로 실행된 경우
     messaging()
