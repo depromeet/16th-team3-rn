@@ -13,6 +13,8 @@ import {WebViewManager} from '../utils/WebViewManager';
 import {useCameraPermission} from 'react-native-vision-camera';
 import {requestUserPermission} from '../utils/permission';
 
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+
 export default function WebViewScreen({
   navigation,
   route,
@@ -157,6 +159,39 @@ export default function WebViewScreen({
     }
   };
 
+  // 인앱 브라우저 처리
+  const handleLinkPress = async (url: string) => {
+    try {
+      if (await InAppBrowser.isAvailable()) {
+        await InAppBrowser.open(url, {
+          // iOS 프로퍼티 참고
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: 'white',
+          preferredControlTintColor: 'black',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: true,
+          enableBarCollapsing: false,
+          // Android 프로퍼티 참고
+          showTitle: true,
+          toolbarColor: '#6200EE',
+          secondaryToolbarColor: 'black',
+          navigationBarColor: 'black',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: true,
+          enableDefaultShare: true,
+          forceCloseOnRedirection: false,
+        });
+      } else {
+        Linking.openURL(url);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // iOS에서 커스텀 URL 스킴(예: kakaotalk://) 감지하여 외부 앱 호출
   const handleShouldStartLoadWithRequest = (request: any) => {
     const {url} = request;
@@ -165,7 +200,7 @@ export default function WebViewScreen({
       return false; // 웹뷰에서는 해당 URL 로드하지 않음
     }
     if (!request.url.startsWith('https://spurt.site')) {
-      Linking.openURL(request.url);
+      handleLinkPress(request.url);
       return false; // WebView가 직접 열지 않도록 중단
     }
     return true;

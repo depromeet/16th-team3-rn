@@ -21,6 +21,7 @@
     "react-native": "0.78.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.24.0",
+    "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-reanimated": "^3.17.1",
     "react-native-safe-area-context": "^5.2.0",
     "react-native-screens": "^4.9.1",
