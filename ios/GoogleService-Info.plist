@@ -26,13 +26,5 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:385775822797:ios:642d69539571af375b8684</string>
-	<key>CFBundleTypeRole</key>
-    <string>Editor</string>
-    <key>CFBundleURLName</key>
-    <string>com.spurt</string>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>spurt</string>
-    </array>
 </dict>
 </plist>

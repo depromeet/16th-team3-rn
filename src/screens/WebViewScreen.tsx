@@ -25,6 +25,7 @@ export default function WebViewScreen({
   const webViewRef = useRef<WebView>(null);
   const {hasPermission, requestPermission} = useCameraPermission();
   const [hasInjected, setHasInjected] = useState(false);
+  const [isInAppBrowserOpen, setIsInAppBrowserOpen] = useState(false);
   // 알림에서 전달받은 경로
   const {routeToOpen} = route.params || {};
 
@@ -98,6 +99,15 @@ export default function WebViewScreen({
     }
   };
 
+  const isLoginUrl = (url: string) => {
+    // spurt.site 내 특정 경로가 로그인 페이지일 때 판단.
+    // 예: https://spurt.site/oauth/kakao
+    return (
+      url.includes('/oauth/callback/kakao') ||
+      url.includes('https://kauth.kakao.com/oauth/authorize')
+    );
+  };
+
   // WebView가 로드된 후 (onLoadEnd)에 routeToOpen이 있다면 injectJavaScript로 페이지 이동
   const handleWebViewLoadEnd = useCallback(() => {
     console.log('1. handleWebViewLoadEnd 시작');
@@ -159,8 +169,82 @@ export default function WebViewScreen({
     }
   };
 
+  const handleOpenAuth = async (authUrl: string) => {
+    if (isInAppBrowserOpen) {
+      console.log('이미 InAppBrowser가 열려있음.');
+      return;
+    }
+    setIsInAppBrowserOpen(true);
+
+    try {
+      // authUrl에 query parameter 추가: 이미 '?'가 있는지 확인하여 적절히 붙임
+      const authUrlWithPlatform = authUrl.includes('?')
+        ? `${authUrl}&platform=mobile`
+        : `${authUrl}?platform=mobile`;
+
+      // InAppBrowser.openAuth()에 전달할 redirectUri는 커스텀 스킴 URI여야 합니다.
+      const redirectUrl = 'spurt://callback';
+      if (await InAppBrowser.isAvailable()) {
+        const result = (await InAppBrowser.openAuth(
+          authUrlWithPlatform,
+          redirectUrl,
+          {
+            forceCloseOnRedirection: true,
+            showTitle: true,
+            enableUrlBarHiding: true,
+            ephemeralWebSession: false,
+          },
+        )) as any;
+
+        if (result.type === 'success' && result.url) {
+          console.log('InAppBrowser closed, final url:', result.url);
+          InAppBrowser.closeAuth();
+          webViewRef.current?.reload();
+        }
+      } else {
+        Linking.openURL(authUrlWithPlatform);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsInAppBrowserOpen(false);
+    }
+  };
+
   // 인앱 브라우저 처리
-  const handleLinkPress = async (url: string) => {
+  // const handleLinkPress = async (url: string) => {
+  //   try {
+  //     if (await InAppBrowser.isAvailable()) {
+  //       await InAppBrowser.open(url, {
+  //         // iOS 프로퍼티 참고
+  //         dismissButtonStyle: 'cancel',
+  //         preferredBarTintColor: 'white',
+  //         preferredControlTintColor: 'black',
+  //         readerMode: false,
+  //         animated: true,
+  //         modalPresentationStyle: 'fullScreen',
+  //         modalTransitionStyle: 'coverVertical',
+  //         modalEnabled: true,
+  //         enableBarCollapsing: false,
+  //         // Android 프로퍼티 참고
+  //         showTitle: true,
+  //         toolbarColor: '#6200EE',
+  //         secondaryToolbarColor: 'black',
+  //         navigationBarColor: 'black',
+  //         navigationBarDividerColor: 'white',
+  //         enableUrlBarHiding: true,
+  //         enableDefaultShare: true,
+  //         forceCloseOnRedirection: false,
+  //       });
+  //     } else {
+  //       Linking.openURL(url);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  const handleOpenInAppBrowser = async (url: string) => {
     try {
       if (await InAppBrowser.isAvailable()) {
         await InAppBrowser.open(url, {
@@ -194,16 +278,39 @@ export default function WebViewScreen({
 
   // iOS에서 커스텀 URL 스킴(예: kakaotalk://) 감지하여 외부 앱 호출
   const handleShouldStartLoadWithRequest = (request: any) => {
+    console.log('URL:', request.url);
     const {url} = request;
     if (url.startsWith('kakaotalk://') || url.startsWith('kakaokommand://')) {
       Linking.openURL(url);
       return false; // 웹뷰에서는 해당 URL 로드하지 않음
     }
-    if (!request.url.startsWith('https://spurt.site')) {
-      handleLinkPress(request.url);
-      return false; // WebView가 직접 열지 않도록 중단
+
+    // if (
+    //   request.url.startsWith('https://accounts.kakao.com/login') ||
+    //   request.url.startsWith('https://docs.google.com/forms')
+    // ) {
+    //   handleLinkPress(request.url);
+    //   return false; // WebView가 직접 열지 않도록 중단
+    // }
+
+    if (url.startsWith('https://spurt.site')) {
+      // 여기가 '일반' spurt.site 페이지냐, '로그인' 용 spurt.site 경로냐를 구분
+      if (isLoginUrl(url)) {
+        // → 로그인 URL이면 InAppBrowser.openAuth() 열기
+        console.log('여기 안들어오지?');
+
+        handleOpenAuth(url);
+        InAppBrowser.close();
+        return false; // WebView 로드는 중단
+      } else {
+        console.log('일반 페이지');
+        // → 일반적인 spurt.site 페이지면 그대로 WebView에서 열기
+        return true;
+      }
     }
-    return true;
+
+    handleOpenInAppBrowser(url);
+    return false;
   };
 
   return (
