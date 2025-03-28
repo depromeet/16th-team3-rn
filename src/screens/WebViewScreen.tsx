@@ -199,7 +199,11 @@ export default function WebViewScreen({
       Linking.openURL(url);
       return false; // 웹뷰에서는 해당 URL 로드하지 않음
     }
-    if (!request.url.startsWith('https://spurt.site')) {
+    if (
+      request.url.startsWith(
+        'https://docs.google.com/forms/d/e/1FAIpQLSewine18Gw4dpEeT-NwN2M9Cuw6hRUiKVd3g0wrNOazW58GWA/viewform',
+      )
+    ) {
       handleLinkPress(request.url);
       return false; // WebView가 직접 열지 않도록 중단
     }
