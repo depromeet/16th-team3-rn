@@ -210,6 +210,33 @@ export default function WebViewScreen({
     return true;
   };
 
+  const injectedJS = `
+  (function() {
+    // 줌(확대/축소) 기능 제한: viewport 메타 태그 설정
+    var metaTag = document.querySelector('meta[name=viewport]');
+    if (metaTag) {
+      metaTag.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+    } else {
+      metaTag = document.createElement('meta');
+      metaTag.setAttribute('name', 'viewport');
+      metaTag.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+      document.head.appendChild(metaTag);
+    }
+    
+    // 텍스트 선택 및 드래그 방지: CSS 적용
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = 'body { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }';
+    document.head.appendChild(style);
+    
+    // 컨텍스트 메뉴(우클릭/롱프레스) 비활성화
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  })();
+  true;
+`;
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" hidden={false} />
@@ -235,6 +262,7 @@ export default function WebViewScreen({
         javaScriptEnabled={true}
         sharedCookiesEnabled={true}
         domStorageEnabled={true}
+        injectedJavaScript={injectedJS}
       />
     </View>
   );
