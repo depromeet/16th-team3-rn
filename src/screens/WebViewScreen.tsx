@@ -263,6 +263,8 @@ export default function WebViewScreen({
         sharedCookiesEnabled={true}
         domStorageEnabled={true}
         injectedJavaScript={injectedJS}
+        bounces={false} // 아이폰 overScrollMode="never"  방지
+        overScrollMode="never" // 아이폰 overScrollMode="never"  방지
       />
     </View>
   );
