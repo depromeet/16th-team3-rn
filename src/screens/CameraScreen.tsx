@@ -22,6 +22,7 @@ export default function CameraScreen({
   const camera = useRef<Camera>(null);
   const device = useCameraDevice('back');
   const taskId = route.params?.taskId;
+  const action = route.params?.action;
 
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
@@ -91,7 +92,9 @@ export default function CameraScreen({
       {/* "작업공간이 보이게 사진을 찍어주세요" 툴팁 */}
       <View style={styles.tooltipContainer}>
         <Text style={styles.tooltipText}>
-          작업공간이 보이게 사진을 찍어주세요
+          {action}
+          {'\n'}
+          준비가 완료됐다면, 사진을 찍어 인증을 완료해주세요!
         </Text>
       </View>
       {/* 촬영 버튼 */}
@@ -171,14 +174,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 120, // 촬영 버튼 위쪽에 배치
     alignSelf: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#2A2F38',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
   },
   tooltipText: {
-    color: 'black',
+    color: 'white',
     fontSize: 14,
+    textAlign: 'center',
   },
   tooltipArrow: {
     position: 'absolute',

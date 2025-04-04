@@ -51,6 +51,7 @@ export default function WebViewScreen({
             console.log('Navigating to CameraViewScreen...');
             navigation.navigate('CameraView', {
               taskId: message.payload?.taskId,
+              action: message.action,
             });
           }
           break;
