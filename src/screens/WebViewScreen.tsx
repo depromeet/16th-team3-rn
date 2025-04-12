@@ -258,7 +258,7 @@ export default function WebViewScreen({
     // 텍스트 선택 및 드래그 방지: CSS 적용
     var style = document.createElement('style');
     style.type = 'text/css';
-    style.innerHTML = 'body { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }';
+    style.innerHTML = 'body { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; overscroll-behavior: none; }';
     document.head.appendChild(style);
     
     // 컨텍스트 메뉴(우클릭/롱프레스) 비활성화
@@ -295,8 +295,9 @@ export default function WebViewScreen({
         sharedCookiesEnabled={true}
         domStorageEnabled={true}
         injectedJavaScript={injectedJS}
-        bounces={false} // 아이폰 overScrollMode="never"  방지
-        overScrollMode="never" // 아이폰 overScrollMode="never"  방지
+        bounces={false} // 아이폰 스크롤 시 bounce 효과 방지
+        allowsInlineMediaPlayback={true}
+        pullToRefreshEnabled={false}
       />
     </View>
   );
@@ -313,6 +314,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: '#0F1114',
   },
   cameraContainer: {
     flex: 1,

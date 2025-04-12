@@ -305,7 +305,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sprt.ssak;
 				PRODUCT_NAME = spurtRN;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "마지막";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "호날두";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -343,7 +343,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sprt.ssak;
 				PRODUCT_NAME = spurtRN;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "마지막";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "호날두";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
