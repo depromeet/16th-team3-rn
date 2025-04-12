@@ -1,7 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-
+apply plugin: 'com.google.gms.google-services'
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -75,23 +75,31 @@ def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdk 36
 
     namespace "com.spurtrn"
     defaultConfig {
-        applicationId "com.spurtrn"
+        applicationId "com.ssak3.spurt"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
     signingConfigs {
-        debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
+        // debug {
+        //     storeFile file('debug.keystore')
+        //     storePassword 'android'
+        //     keyAlias 'androiddebugkey'
+        //     keyPassword 'android'
+        // }
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+    }
     }
     buildTypes {
         debug {
@@ -100,9 +108,10 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -110,10 +119,20 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation platform('com.google.firebase:firebase-bom:32.1.0')
+    implementation "androidx.browser:browser:1.5.0"
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
+    }
+}
+
+// 의존성 충돌 해결을 위한 설정 추가
+configurations.all {
+    resolutionStrategy {
+        force "androidx.browser:browser:1.5.0"
+        // 다른 의존성 충돌이 있다면 여기에 추가
     }
 }

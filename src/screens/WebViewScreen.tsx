@@ -11,7 +11,10 @@ import {WebView} from 'react-native-webview';
 import {Vibration} from 'react-native';
 import {WebViewManager} from '../utils/WebViewManager';
 import {useCameraPermission} from 'react-native-vision-camera';
-import {requestUserPermission} from '../utils/permission';
+import {
+  checkPermissionAndRequestPush,
+  requestUserPermission,
+} from '../utils/permission';
 
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
@@ -83,11 +86,39 @@ export default function WebViewScreen({
 
             return;
           }
-
+          console.log('fcmToken', fcmToken);
           WebViewManager.postMessage(
             fcmToken,
             'GET_DEVICE_TOKEN',
             '핸들러통해서옴',
+          );
+          break;
+        }
+
+        case 'GET_DEVICE_TYPE': {
+          console.log('GET_DEVICE_TYPE');
+          WebViewManager.postMessage('', 'GET_DEVICE_TYPE', '');
+          break;
+        }
+
+        // 알림권한이 승인되어있는지 체크하는 메세지
+        // 1. 승인되어있다면, 토큰 받아오기
+        // 2. 승인되어있지 않다면, 아무값도 반환하지 않음
+        case 'CHECK_IF_ALARM_ON': {
+          console.log('CHECK_IF_ALARM_ON');
+          const fcmToken = await checkPermissionAndRequestPush();
+          if (!fcmToken) {
+            WebViewManager.postMessage(
+              null,
+              'CHECK_IF_ALARM_ON',
+              '알림권한이 없어서 토큰이 없음',
+            );
+            return;
+          }
+          WebViewManager.postMessage(
+            fcmToken,
+            'CHECK_IF_ALARM_ON',
+            '알림권한이 있어서 토큰 받아옴',
           );
           break;
         }

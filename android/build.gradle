@@ -10,14 +10,15 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "$rootDir/../node_modules/expo-camera/android/maven"
+        }
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
-    }
-    maven {
-        url "$rootDir/../node_modules/expo-camera/android/maven"
+        classpath('com.google.gms:google-services:4.4.2')
     }
 }
 
