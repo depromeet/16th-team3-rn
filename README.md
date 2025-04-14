@@ -1,97 +1,58 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+<img src="https://github.com/user-attachments/assets/9a99be59-ba32-4bb4-80db-4a5b1d0db7ec" width=120 />
 
-# Getting Started
+# ⏰✨ SPURT - 미루는 당신을 위한 마지막 스퍼트
+<p align="center"><img src="https://github.com/user-attachments/assets/a48e4526-7041-4c8c-ba4f-2eead05e9631" width=1300></p>
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+[![AppStore](http://img.shields.io/badge/AppStore-A9A9EE?style=flat&logo=ios&logoColor=black&link=https://apps.apple.com/kr/app/spurt/id6743025568)](https://apps.apple.com/kr/app/spurt/id6743025568)
+[![Instagram](http://img.shields.io/badge/Instagram-E4405F?style=flat&logo=instagram&logoColor=white&link=https://www.instagram.com/spurt_on/)](https://www.instagram.com/spurt_on/)
+[![서비스 소개](http://img.shields.io/badge/서비스_소개-1976D2?style=flat&logo=notion&logoColor=white&link=https://verdant-flax-c80.notion.site/SPURT-1b0d6a7e188a80aebfceda8f8cd6a86c)](https://verdant-flax-c80.notion.site/SPURT-1b0d6a7e188a80aebfceda8f8cd6a86c)
 
-## Step 1: Start Metro
+## **여유 시간을 확보하고, 작은행동으로 바로 시작하세요 🔥**
+⏰ 아직도 "지금 말고 조금 이따가..." 하고 있나요?
+</br>
+계속 미루게 되는 할 일, 막상 시작하면 또 금방 끝나는 거… 우리 모두 알죠 🥲
+</br>
+</br>
+🚨 **SPURT**는 할 일을 미루다가 늘 마감 직전 벼락치기하는 사람들을 위한 시간관리 앱입니다 🔥
+</br>
+</br>
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## ✨ 주요 기능
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 1️⃣ 쉽고 간편하게 할 일을 확인해요.
+![1](https://github.com/user-attachments/assets/99eb300f-2d44-4125-ad7e-299cae9c43e1)
 
-```sh
-# Using npm
-npm start
+### 2️⃣ 간단하고 빠르게 할 일을 등록해요.
+![2](https://github.com/user-attachments/assets/acc4a8b7-7656-4c1b-a4fe-05edff796af3)
 
-# OR using Yarn
-yarn start
-```
+### 3️⃣ 할 일을 시작할 때까지 알려줘요.
+![3](https://github.com/user-attachments/assets/4bfda55c-cd0c-437f-b9fc-ba692e6e8896)
 
-## Step 2: Build and run your app
+### 4️⃣ 캐릭터와 함께 스퍼트를 내요.
+![4](https://github.com/user-attachments/assets/54af266f-71d9-476a-a585-c7f9afbf7cdb)
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### 5️⃣ 몰입했던 순간을 간단하게 기록해요.
+![5](https://github.com/user-attachments/assets/305e25eb-875c-4c25-b943-27f8fc631799)
 
-### Android
+</br>
+</br>
 
-```sh
-# Using npm
-npm run android
+## 🛠️ TECH STACK
+![2224670](https://github.com/user-attachments/assets/e45db2d8-ba7a-434e-9729-62235bb200c9)
+</br>
+</br>
 
-# OR using Yarn
-yarn android
-```
+## 🕸️ SOFTWARE ARCHITECTURE
+![2224672](https://github.com/user-attachments/assets/5734796a-7010-4e66-9507-61d2c90e7c09)
+</br>
+</br>
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 🧑🏻‍💻 DEVELOPERS
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/supersett"><img width="200" src="https://github.com/user-attachments/assets/fd0368f0-da58-448d-9f80-a0d20c6fa446" alt=""/><br /><sub><b>정현우</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/prgmr99"><img width="200" src="https://github.com/user-attachments/assets/f9be1d6c-2eb0-4fc0-bb00-0b2817b6bdbb" alt=""/><br /><sub><b>염승준</b></sub></a><br /></td>
+      </tr>
+  </tbody>
+</table>
