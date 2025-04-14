@@ -295,9 +295,10 @@ export default function WebViewScreen({
         sharedCookiesEnabled={true}
         domStorageEnabled={true}
         injectedJavaScript={injectedJS}
-        bounces={false} // 아이폰 스크롤 시 bounce 효과 방지
+        bounces={false}
         allowsInlineMediaPlayback={true}
         pullToRefreshEnabled={false}
+        onContentProcessDidTerminate={() => webViewRef.current?.reload()}
       />
     </View>
   );
