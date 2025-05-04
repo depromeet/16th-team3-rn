@@ -11,9 +11,20 @@
 		2C7988E42D92EF9700F73C50 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C7988E32D92EF9700F73C50 /* Assets.xcassets */; };
 		2C7988E52D92F58100F73C50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		2C7988EE2D92F7C600F73C50 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C7988ED2D92F7C600F73C50 /* GoogleService-Info.plist */; };
+		2CA7B47D2DC74EDB0079038A /* libRNReactNativeHapticFeedback.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA7B47C2DC74EDB0079038A /* libRNReactNativeHapticFeedback.a */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		CDC10266520A0AE436E3960E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2CA7B47A2DC74EA50079038A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2CA7B4762DC74EA50079038A /* RNHapticFeedback.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNHapticFeedback;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* spurtRN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = spurtRN.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,6 +33,8 @@
 		2C0D6C352D73513500CB7E26 /* spurtRN.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = spurtRN.entitlements; path = spurtRN/spurtRN.entitlements; sourceTree = "<group>"; };
 		2C7988E32D92EF9700F73C50 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C7988ED2D92F7C600F73C50 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2CA7B4762DC74EA50079038A /* RNHapticFeedback.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = RNHapticFeedback.xcodeproj; sourceTree = "<group>"; };
+		2CA7B47C2DC74EDB0079038A /* libRNReactNativeHapticFeedback.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNReactNativeHapticFeedback.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-spurtRN.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-spurtRN.debug.xcconfig"; path = "Target Support Files/Pods-spurtRN/Pods-spurtRN.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-spurtRN.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-spurtRN.release.xcconfig"; path = "Target Support Files/Pods-spurtRN/Pods-spurtRN.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-spurtRN.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-spurtRN.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -35,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CA7B47D2DC74EDB0079038A /* libRNReactNativeHapticFeedback.a in Frameworks */,
 				0C80B921A6F3F58F76C31292 /* libPods-spurtRN.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -56,9 +70,18 @@
 			name = spurtRN;
 			sourceTree = "<group>";
 		};
+		2CA7B4772DC74EA50079038A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2CA7B47B2DC74EA50079038A /* libRNHapticFeedback.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2CA7B47C2DC74EDB0079038A /* libRNReactNativeHapticFeedback.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-spurtRN.a */,
 			);
@@ -75,6 +98,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				2CA7B4762DC74EA50079038A /* RNHapticFeedback.xcodeproj */,
 				13B07FAE1A68108700A75B9A /* spurtRN */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -152,12 +176,28 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 2CA7B4772DC74EA50079038A /* Products */;
+					ProjectRef = 2CA7B4762DC74EA50079038A /* RNHapticFeedback.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* spurtRN */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		2CA7B47B2DC74EA50079038A /* libRNHapticFeedback.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNHapticFeedback.a;
+			remoteRef = 2CA7B47A2DC74EA50079038A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
@@ -305,7 +345,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sprt.ssak;
 				PRODUCT_NAME = spurtRN;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "호날두";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "마지막";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -343,7 +383,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sprt.ssak;
 				PRODUCT_NAME = spurtRN;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "호날두";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "마지막";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

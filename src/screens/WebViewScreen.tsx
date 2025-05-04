@@ -8,7 +8,8 @@ import {
   Platform,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
-import {Vibration} from 'react-native';
+import {triggerHaptic} from '../utils/hapticFeedback';
+
 import {WebViewManager} from '../utils/WebViewManager';
 import {useCameraPermission} from 'react-native-vision-camera';
 import {
@@ -57,20 +58,6 @@ export default function WebViewScreen({
               action: message.action,
             });
           }
-          break;
-        case 'VIBRATE_ON':
-          Vibration.vibrate([1000, 500], true);
-          break;
-        case 'VIBRATE_OFF':
-          Vibration.cancel();
-          break;
-        case 'KEY_DOWN':
-          console.log('KEY_DOWN');
-          break;
-        case 'test':
-          console.log('test');
-          console.log('test');
-          console.log('test');
           break;
 
         case 'GET_DEVICE_TOKEN': {
@@ -122,6 +109,12 @@ export default function WebViewScreen({
           );
           break;
         }
+
+        case 'haptic': {
+          triggerHaptic(message.style);
+          break;
+        }
+
         default:
           console.log('Unknown message type:', message.type);
       }
@@ -269,6 +262,21 @@ export default function WebViewScreen({
   true;
 `;
 
+  // 진동효과를 위한 자바스크립트 주입
+  const HAPTIC_INJECTED_JS = `
+  (function() {
+    document.addEventListener('click', function(e) {
+    const styleAttr = e.target.getAttribute('data-haptic');
+    if (styleAttr) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ type: 'haptic', style: styleAttr })
+      );
+    }
+    }, true);
+  })();
+  true;
+  `;
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" hidden={false} />
@@ -283,7 +291,6 @@ export default function WebViewScreen({
         onError={event => {
           console.error('WebView error: ', event.nativeEvent);
         }}
-        // 추가: 커스텀 URL 스킴 처리
         onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
         // 추가: Kakao 하이브리드 환경 감지를 위한 user agent 설정 (iOS의 경우)
         userAgent={
@@ -299,6 +306,7 @@ export default function WebViewScreen({
         allowsInlineMediaPlayback={true}
         pullToRefreshEnabled={false}
         onContentProcessDidTerminate={() => webViewRef.current?.reload()}
+        injectedJavaScriptBeforeContentLoaded={HAPTIC_INJECTED_JS}
       />
     </View>
   );
