@@ -6,6 +6,8 @@ import {
   Alert,
   Linking,
   Platform,
+  InteractionManager,
+  AppState,
 } from 'react-native';
 import {WebView} from 'react-native-webview';
 import {triggerHaptic} from '../utils/hapticFeedback';
@@ -235,6 +237,15 @@ export default function WebViewScreen({
     return true;
   };
 
+  /**
+   * WebView의 contentProcess가 종료되었을 때 호출되는 함수
+   */
+  const handleTerminate = () => {
+    InteractionManager.runAfterInteractions(() => {
+      webViewRef.current?.reload();
+    });
+  };
+
   const injectedJS = `
   (function() {
     // 줌(확대/축소) 기능 제한: viewport 메타 태그 설정
@@ -277,6 +288,15 @@ export default function WebViewScreen({
   true;
   `;
 
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', next => {
+      if (next === 'active') {
+        webViewRef.current?.reload();
+      }
+    });
+    return () => sub.remove();
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" hidden={false} />
@@ -305,7 +325,7 @@ export default function WebViewScreen({
         bounces={false}
         allowsInlineMediaPlayback={true}
         pullToRefreshEnabled={false}
-        onContentProcessDidTerminate={() => webViewRef.current?.reload()}
+        onContentProcessDidTerminate={handleTerminate}
         injectedJavaScriptBeforeContentLoaded={HAPTIC_INJECTED_JS}
       />
     </View>
