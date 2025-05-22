@@ -307,6 +307,7 @@ export default function WebViewScreen({
         pullToRefreshEnabled={false}
         onContentProcessDidTerminate={() => webViewRef.current?.reload()}
         injectedJavaScriptBeforeContentLoaded={HAPTIC_INJECTED_JS}
+        allowsBackForwardNavigationGestures={true}
       />
     </View>
   );
