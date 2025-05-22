@@ -19,6 +19,48 @@ import {
 
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 
+const injectedJS = `
+  (function() {
+    // 줌(확대/축소) 기능 제한: viewport 메타 태그 설정
+    var metaTag = document.querySelector('meta[name=viewport]');
+    if (metaTag) {
+      metaTag.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+    } else {
+      metaTag = document.createElement('meta');
+      metaTag.setAttribute('name', 'viewport');
+      metaTag.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+      document.head.appendChild(metaTag);
+    }
+    
+    // 텍스트 선택 및 드래그 방지: CSS 적용
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = 'body { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; overscroll-behavior: none; }';
+    document.head.appendChild(style);
+    
+    // 컨텍스트 메뉴(우클릭/롱프레스) 비활성화
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  })();
+  true;
+`;
+
+// 진동효과를 위한 자바스크립트 주입
+const HAPTIC_INJECTED_JS = `
+  (function() {
+    document.addEventListener('click', function(e) {
+    const styleAttr = e.target.getAttribute('data-haptic');
+    if (styleAttr) {
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({ type: 'haptic', style: styleAttr })
+      );
+    }
+    }, true);
+  })();
+  true;
+  `;
+
 export default function WebViewScreen({
   navigation,
   route,
@@ -28,13 +70,10 @@ export default function WebViewScreen({
 }) {
   const webViewRef = useRef<WebView>(null);
   const {hasPermission, requestPermission} = useCameraPermission();
+  const [webviewKey, setWebviewKey] = useState(0);
   const [hasInjected, setHasInjected] = useState(false);
-  // 알림에서 전달받은 경로
-  const {routeToOpen} = route.params || {};
 
-  useEffect(() => {
-    WebViewManager.setWebViewRef(webViewRef);
-  }, [webViewRef]);
+  const {routeToOpen} = route.params || {}; // 알림에서 전달받은 경로
 
   const handleWebViewMessage = async (event: any) => {
     try {
@@ -144,28 +183,7 @@ export default function WebViewScreen({
     }
   }, [routeToOpen, hasInjected]);
 
-  // WebView ref (이미 존재하는 경우 사용)
-  // 예: const webViewRef = useRef<WebView>(null);
-
-  useEffect(() => {
-    // 앱이 딥링크로 열렸을 때의 초기 URL 처리
-    Linking.getInitialURL().then(url => {
-      if (url) {
-        handleDeepLink(url);
-      }
-    });
-
-    // 앱이 실행 중일 때 딥링크 이벤트 처리
-    const subscription = Linking.addEventListener('url', ({url}) => {
-      handleDeepLink(url);
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  const handleDeepLink = (url: string) => {
+  const handleDeepLink = useCallback((url: string) => {
     console.log('Received deep link URL:', url);
     // URL을 파싱해서 인가 코드 추출 (예: spurt://auth?code=abc123)
     const codeMatch = url.match(/code=([^&]+)/);
@@ -182,7 +200,7 @@ export default function WebViewScreen({
     } else {
       console.log('인가 코드가 URL에 없습니다.');
     }
-  };
+  }, []);
 
   // 인앱 브라우저 처리
   const handleLinkPress = async (url: string) => {
@@ -235,52 +253,46 @@ export default function WebViewScreen({
     return true;
   };
 
-  const injectedJS = `
-  (function() {
-    // 줌(확대/축소) 기능 제한: viewport 메타 태그 설정
-    var metaTag = document.querySelector('meta[name=viewport]');
-    if (metaTag) {
-      metaTag.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
-    } else {
-      metaTag = document.createElement('meta');
-      metaTag.setAttribute('name', 'viewport');
-      metaTag.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
-      document.head.appendChild(metaTag);
-    }
-    
-    // 텍스트 선택 및 드래그 방지: CSS 적용
-    var style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = 'body { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; overscroll-behavior: none; }';
-    document.head.appendChild(style);
-    
-    // 컨텍스트 메뉴(우클릭/롱프레스) 비활성화
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
-  })();
-  true;
-`;
+  // WebView가 종료된 경우 (iOS/Android에서 프로세스가 종료된 경우)
+  const handleTerminate = () => {
+    // 100ms 딜레이 후에 reload + 리마운트를 실행
+    setTimeout(() => {
+      // 1) reload 시도
+      webViewRef.current?.reload();
+      // 2) key 변경으로 완전 리마운트
+      setWebviewKey(prev => prev + 1);
+    }, 100);
+  };
 
-  // 진동효과를 위한 자바스크립트 주입
-  const HAPTIC_INJECTED_JS = `
-  (function() {
-    document.addEventListener('click', function(e) {
-    const styleAttr = e.target.getAttribute('data-haptic');
-    if (styleAttr) {
-      window.ReactNativeWebView.postMessage(
-        JSON.stringify({ type: 'haptic', style: styleAttr })
-      );
-    }
-    }, true);
-  })();
-  true;
-  `;
+  useEffect(() => {
+    WebViewManager.setWebViewRef(webViewRef);
+  }, []);
+
+  // WebView ref (이미 존재하는 경우 사용)
+  // 예: const webViewRef = useRef<WebView>(null);
+  useEffect(() => {
+    // 앱이 딥링크로 열렸을 때의 초기 URL 처리
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        handleDeepLink(url);
+      }
+    });
+
+    // 앱이 실행 중일 때 딥링크 이벤트 처리
+    const subscription = Linking.addEventListener('url', ({url}) => {
+      handleDeepLink(url);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [handleDeepLink]);
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" hidden={false} />
       <WebView
+        key={webviewKey}
         ref={webViewRef}
         style={styles.webview}
         source={{uri: 'https://spurt.site'}}
@@ -290,6 +302,7 @@ export default function WebViewScreen({
         keyboardDisplayRequiresUserAction={false}
         onError={event => {
           console.error('WebView error: ', event.nativeEvent);
+          handleTerminate();
         }}
         onShouldStartLoadWithRequest={handleShouldStartLoadWithRequest}
         // 추가: Kakao 하이브리드 환경 감지를 위한 user agent 설정 (iOS의 경우)
@@ -305,8 +318,10 @@ export default function WebViewScreen({
         bounces={false}
         allowsInlineMediaPlayback={true}
         pullToRefreshEnabled={false}
-        onContentProcessDidTerminate={() => webViewRef.current?.reload()}
+        onContentProcessDidTerminate={handleTerminate} // iOS에서 프로세스가 종료된 경우
+        onRenderProcessGone={handleTerminate} // Android에서 프로세스가 종료된 경우
         injectedJavaScriptBeforeContentLoaded={HAPTIC_INJECTED_JS}
+        allowsBackForwardNavigationGestures={true}
       />
     </View>
   );
